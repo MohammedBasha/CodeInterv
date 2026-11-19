@@ -27,12 +27,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
     return (
-        <html
-            lang="en"
-            className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-        >
-            <body className="min-h-full flex flex-col">
-                <ClerkProvider>
+        <ClerkProvider>
+            <html
+                lang="en"
+                className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+            >
+                <body className="min-h-full flex flex-col">
                     <header className="flex justify-end items-center p-4 gap-4 h-16">
                         <Suspense>
                             <Show when="signed-out">
@@ -49,8 +49,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                         </Suspense>
                     </header>
                     {children}
-                </ClerkProvider>
-            </body>
-        </html>
+                </body>
+            </html>
+        </ClerkProvider>
     );
 }

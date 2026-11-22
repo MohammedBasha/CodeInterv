@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Show, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
+import { RedirectToSignIn, Show } from "@clerk/nextjs";
 import { Suspense } from "react";
 import ConvexClerkProvider from "@/components/providers/ConvexClerkProvider";
+import { Toaster } from "react-hot-toast";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import Navbar from "@/components/Navbar";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -23,27 +26,31 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
     return (
         <ConvexClerkProvider>
-            <html
-                lang="en"
-                className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-            >
-                <body className="min-h-full flex flex-col">
-                    <header className="flex justify-end items-center p-4 gap-4 h-16">
+            <html lang="en" suppressHydrationWarning>
+                <body
+                    className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+                >
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="system"
+                        enableSystem
+                        disableTransitionOnChange
+                    >
                         <Suspense>
                             <Show when="signed-out">
-                                <SignInButton />
-                                <SignUpButton>
-                                    <button className="bg-purple-700 text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
-                                        Sign Up
-                                    </button>
-                                </SignUpButton>
+                                <RedirectToSignIn />
                             </Show>
                             <Show when="signed-in">
-                                <UserButton />
+                                <div className="min-h-screen">
+                                    <Navbar />
+                                    <main className="px-4 sm:px-6 lg:px-8">
+                                        {children}
+                                    </main>
+                                </div>
                             </Show>
                         </Suspense>
-                    </header>
-                    {children}
+                    </ThemeProvider>
+                    <Toaster />
                 </body>
             </html>
         </ConvexClerkProvider>
